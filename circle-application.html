@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Circle: Your application — Teams of Tomorrow®</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Nunito+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<!--
+====================================================================
+  THE CIRCLE — APPLICATION PAGE TEMPLATE
+  Teams of Tomorrow®  ·  Draft for review
+  Destination of the "Begin your application" button.
+
+  FOR CHRIS — three things to wire up before this goes live:
+
+  1. SUBMIT_ENDPOINT below. A browser cannot send email on its own.
+     Set it to a form service (Formspree, Basin, Tally) or a
+     server-side endpoint. Until it is set, the page validates and
+     saves, but nothing is sent.
+
+  2. FONTS. Argent CF and Sofia Pro Soft are desktop-licence only.
+     This template loads Cormorant Garamond and Nunito Sans as
+     visual stand-ins. Swap to the real families once web licences
+     are in place, or match whatever the live site already serves.
+
+  3. PRIVACY LINK. Search for PRIVACY_URL and point it at the real
+     privacy page.
+
+  Drafts are saved to the applicant's own browser only (localStorage),
+  so a half-finished application survives a closed tab. Nothing is
+  sent anywhere until they press Send.
+====================================================================
+-->
+
+<style>
+:root{
+  color-scheme: light;
+  --navy:#034159;
+  --navy-deep:#022C3C;
+  --orange:#F2955E;
+  --tan:#BFA084;
+  --green:#A4BF69;
+  --green-mid:#D9E0D0;
+  --green-tint:#EFF4E3;
+  --cream:#EDE9E0;
+  --paper:#F7F5F0;
+  --ink:#2E3A40;
+  --muted:#6F7A80;
+  --line:#D8D3C8;
+  --display:"Cormorant Garamond","Argent CF",Georgia,"Times New Roman",serif;
+  --sans:"Nunito Sans","Sofia Pro Soft","Helvetica Neue",Arial,sans-serif;
+  --wrap:760px;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--cream);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-weight:400;
+  font-size:17px;
+  line-height:1.65;
+}
+img{max-width:100%}
+
+/* ---------- masthead ---------- */
+.masthead{
+  background:var(--navy);
+  color:#fff;
+  padding:64px 24px 72px;
+  text-align:center;
+}
+.mark{
+  font-family:var(--display);
+  font-size:26px;
+  letter-spacing:.02em;
+  color:#fff;
+  margin:0 0 40px;
+}
+.mark sup{font-size:.5em;vertical-align:super}
+.eyebrow{
+  font-size:12px;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  font-weight:600;
+  margin:0 0 18px;
+}
+.masthead .eyebrow{color:var(--tan)}
+.masthead h1{
+  font-family:var(--display);
+  font-weight:400;
+  font-size:clamp(34px,6vw,54px);
+  line-height:1.1;
+  margin:0;
+}
+.masthead h1 em{color:var(--orange);font-style:italic}
+.rule{
+  width:72px;height:1px;background:var(--tan);
+  margin:32px auto 0;border:0;
+}
+
+/* ---------- layout ---------- */
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
+main{padding:56px 0 24px}
+section{margin:0 0 52px}
+
+h2{
+  font-family:var(--display);
+  font-weight:400;
+  font-size:clamp(26px,4vw,34px);
+  line-height:1.2;
+  color:var(--navy);
+  margin:0 0 14px;
+}
+h3{
+  font-family:var(--sans);
+  font-size:17px;
+  font-weight:700;
+  color:var(--navy);
+  margin:0 0 6px;
+}
+p{margin:0 0 16px}
+.lede{font-size:18px}
+.muted{color:var(--muted)}
+.small{font-size:15px}
+
+.divider{border:0;border-top:1px solid var(--line);margin:0 0 44px}
+
+/* ---------- intro panel ---------- */
+.panel{
+  background:var(--paper);
+  border-left:4px solid var(--green);
+  padding:24px 26px;
+  margin:0 0 20px;
+}
+.panel.warm{border-left-color:var(--orange)}
+.panel p:last-child{margin-bottom:0}
+
+/* ---------- form ---------- */
+fieldset{border:0;margin:0;padding:0}
+legend{padding:0}
+
+.field{margin:0 0 22px}
+.field label,.qlabel{
+  display:block;
+  font-weight:600;
+  font-size:15px;
+  color:var(--navy);
+  margin:0 0 6px;
+}
+.hint{
+  display:block;
+  font-size:14px;
+  color:var(--muted);
+  margin:0 0 8px;
+  line-height:1.5;
+}
+.req{color:var(--orange);font-weight:700;margin-left:2px}
+.opt{color:var(--muted);font-weight:400;font-size:13px;letter-spacing:.04em;text-transform:uppercase;margin-left:6px}
+
+input[type=text],input[type=email],input[type=tel],input[type=url],select,textarea{
+  width:100%;
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.55;
+  color:var(--ink);
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:2px;
+  padding:11px 13px;
+  transition:border-color .15s, box-shadow .15s;
+}
+select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--navy) 50%),linear-gradient(135deg,var(--navy) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:38px}
+textarea{resize:vertical;min-height:120px}
+textarea.answer{min-height:230px}
+input:focus,select:focus,textarea:focus{
+  outline:none;
+  border-color:var(--navy);
+  box-shadow:0 0 0 3px rgba(3,65,89,.10);
+}
+.invalid input,.invalid select,.invalid textarea{border-color:var(--orange);background:#FFFBF8}
+.err{display:none;font-size:14px;color:#B4552A;margin:6px 0 0}
+.invalid .err{display:block}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:0 20px}
+@media (max-width:620px){.grid{grid-template-columns:1fr}}
+
+.checks{margin:0}
+.check{
+  display:flex;gap:12px;align-items:flex-start;
+  padding:13px 0;border-top:1px solid var(--line);
+}
+.check:last-child{border-bottom:1px solid var(--line)}
+.check input{margin:4px 0 0;width:18px;height:18px;flex:0 0 auto;accent-color:var(--navy)}
+.check label{font-weight:400;font-size:16px;color:var(--ink);margin:0;cursor:pointer}
+.checkwrap.invalid .check{border-color:var(--orange)}
+
+/* ---------- questions ---------- */
+.question{
+  background:var(--paper);
+  border:1px solid var(--line);
+  padding:26px 26px 22px;
+  margin:0 0 26px;
+}
+.qnum{
+  font-family:var(--display);
+  font-style:italic;
+  font-size:30px;
+  color:var(--orange);
+  line-height:1;
+  margin:0 0 8px;
+}
+.qtext{
+  font-family:var(--display);
+  font-style:italic;
+  font-size:22px;
+  line-height:1.35;
+  color:var(--navy);
+  margin:0 0 18px;
+}
+.counter{
+  display:flex;justify-content:space-between;align-items:baseline;
+  font-size:14px;color:var(--muted);margin:8px 0 0;gap:12px;
+}
+.counter .n{font-weight:700;color:var(--navy)}
+.counter .n.under{color:var(--tan)}
+.counter .n.ok{color:#5E7F2E}
+.counter .n.over{color:var(--orange)}
+
+/* ---------- actions ---------- */
+.actions{
+  border-top:1px solid var(--line);
+  padding:32px 0 0;margin:0 0 20px;
+}
+.btn{
+  font-family:var(--sans);font-size:15px;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;
+  padding:16px 30px;border-radius:2px;border:1px solid transparent;
+  cursor:pointer;transition:background .15s,color .15s,border-color .15s;
+}
+.btn-primary{background:var(--orange);color:var(--navy-deep);border-color:var(--orange)}
+.btn-primary:hover{background:#E8834A}
+.btn-ghost{background:transparent;color:var(--navy);border-color:var(--navy)}
+.btn-ghost:hover{background:var(--navy);color:#fff}
+.btnrow{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.savednote{font-size:14px;color:var(--muted);min-height:20px;margin:14px 0 0}
+
+.formnote{
+  display:none;
+  padding:16px 18px;margin:0 0 20px;
+  border-left:4px solid var(--orange);background:#FBF3EC;
+  font-size:15px;color:var(--navy);
+}
+.formnote.show{display:block}
+
+/* ---------- sent ---------- */
+#sent{display:none;text-align:center;padding:40px 0 20px}
+#sent.show{display:block}
+#sent h2{margin-bottom:18px}
+
+/* ---------- footer ---------- */
+footer{
+  background:var(--navy);color:#fff;
+  text-align:center;padding:48px 24px 40px;margin:48px 0 0;
+}
+footer .tag{font-family:var(--display);font-style:italic;font-size:22px;margin:0 0 10px}
+footer .small{color:var(--green-mid);font-size:14px;margin:0}
+footer a{color:var(--green-mid)}
+
+/* ---------- print ---------- */
+@media print{
+  .masthead,footer{background:#fff!important;color:var(--navy)!important;padding:0 0 18px}
+  .masthead .eyebrow,.mark,footer .small,footer a{color:var(--navy)!important}
+  .actions,.formnote,.hint,.counter{display:none!important}
+  body{background:#fff;font-size:12pt}
+  .question,.panel{background:#fff;break-inside:avoid}
+  textarea,input,select{border:1px solid #999}
+}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <p class="mark">Teams of Tomorrow<sup>®</sup></p>
+  <p class="eyebrow">The Circle</p>
+  <h1>Your <em>application</em></h1>
+  <hr class="rule">
+</header>
+
+<main class="wrap">
+
+  <section id="intro">
+    <p class="lede">This is the part that takes time, and it is meant to. Most of the work happens before you type anything: sitting with the three questions, letting them turn over for a few days, noticing what keeps coming back.</p>
+    <p>Everything else on this page takes a few minutes.</p>
+
+    <div class="panel">
+      <p><strong>You can come back to this.</strong> Your answers are saved in this browser as you write, so you can close the tab and return to finish. Nothing reaches us until you press <em>Send my application</em>.</p>
+    </div>
+
+    <div class="panel warm">
+      <p><strong>In your own words.</strong> Unpolished is welcome. We ask that you write these yourself, without the help of AI — we'd rather meet you than a version of you.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <form id="app" novalidate>
+
+    <!-- ===== 1. ABOUT YOU ===== -->
+    <section>
+      <p class="eyebrow" style="color:var(--tan)">Part one</p>
+      <h2>About you</h2>
+
+      <div class="grid">
+        <div class="field" data-field>
+          <label for="fullname">Full name<span class="req">*</span></label>
+          <input type="text" id="fullname" name="fullname" autocomplete="name" required>
+          <p class="err">Please add your name.</p>
+        </div>
+        <div class="field" data-field>
+          <label for="preferred">What we should call you<span class="opt">Optional</span></label>
+          <input type="text" id="preferred" name="preferred">
+        </div>
+        <div class="field" data-field>
+          <label for="email">Email<span class="req">*</span></label>
+          <input type="email" id="email" name="email" autocomplete="email" required>
+          <p class="err">Please add an email address we can reply to.</p>
+        </div>
+        <div class="field" data-field>
+          <label for="phone">Phone<span class="opt">Optional</span></label>
+          <input type="tel" id="phone" name="phone" autocomplete="tel">
+        </div>
+        <div class="field" data-field>
+          <label for="linkedin">LinkedIn<span class="opt">Optional</span></label>
+          <input type="url" id="linkedin" name="linkedin" placeholder="https://">
+        </div>
+        <div class="field" data-field>
+          <label for="location">Where you're based<span class="req">*</span></label>
+          <input type="text" id="location" name="location" placeholder="City and country" required>
+          <p class="err">Please tell us where you're based.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 2. YOUR ROLE ===== -->
+    <section>
+      <p class="eyebrow" style="color:var(--tan)">Part two</p>
+      <h2>Your role</h2>
+      <p class="muted small">This helps us understand the weight you're carrying day to day, and who else might be in the room with you.</p>
+
+      <div class="grid">
+        <div class="field" data-field>
+          <label for="role">Your role or title<span class="req">*</span></label>
+          <input type="text" id="role" name="role" required>
+          <p class="err">Please add your role.</p>
+        </div>
+        <div class="field" data-field>
+          <label for="tenure">How long you've held it<span class="opt">Optional</span></label>
+          <input type="text" id="tenure" name="tenure" placeholder="e.g. two years">
+        </div>
+        <div class="field" data-field>
+          <label for="org">Organisation<span class="req">*</span></label>
+          <input type="text" id="org" name="org" required>
+          <p class="err">Please add your organisation.</p>
+        </div>
+        <div class="field" data-field>
+          <label for="website">Website<span class="opt">Optional</span></label>
+          <input type="url" id="website" name="website" placeholder="https://">
+        </div>
+        <div class="field" data-field>
+          <label for="size">Number of people<span class="req">*</span></label>
+          <select id="size" name="size" required>
+            <option value="">Please choose</option>
+            <option>Fewer than 6</option>
+            <option>6 – 25</option>
+            <option>26 – 60</option>
+            <option>61 – 120</option>
+            <option>121 – 200</option>
+            <option>More than 200</option>
+          </select>
+          <p class="err">Please choose a range.</p>
+        </div>
+        <div class="field" data-field>
+          <label for="orgtype">What best describes it<span class="req">*</span></label>
+          <select id="orgtype" name="orgtype" required>
+            <option value="">Please choose</option>
+            <option>Founder-led business</option>
+            <option>Scale-up</option>
+            <option>Purpose-driven organisation</option>
+            <option>B Corp or aspiring B Corp</option>
+            <option>Professional services firm</option>
+            <option>Social enterprise</option>
+            <option>A business unit within a larger organisation</option>
+            <option>Something else</option>
+          </select>
+          <p class="err">Please choose one.</p>
+        </div>
+      </div>
+
+      <div class="field" data-field>
+        <label for="team">Who reports to you, and how big is the leadership team around you?<span class="opt">Optional</span></label>
+        <span class="hint">A sentence is plenty.</span>
+        <textarea id="team" name="team" rows="3"></textarea>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ===== 3. THE THREE QUESTIONS ===== -->
+    <section>
+      <p class="eyebrow" style="color:var(--tan)">Part three</p>
+      <h2>The three questions</h2>
+      <p>Somewhere between 150 and 300 words for each tends to work well: enough room to go beneath the surface, and short enough to stop once you've said the thing.</p>
+
+      <div class="question" data-field>
+        <p class="qnum">1</p>
+        <p class="qtext">What is the single biggest challenge you're facing as a leader right now — the one that keeps you up at night?</p>
+        <label class="qlabel" for="q1">Your answer<span class="req">*</span></label>
+        <textarea id="q1" name="q1" class="answer" data-count required></textarea>
+        <div class="counter"><span class="muted">Guide: 150 – 300 words</span><span><span class="n" id="q1-n">0</span> words</span></div>
+        <p class="err">Please answer this question before sending.</p>
+      </div>
+
+      <div class="question" data-field>
+        <p class="qnum">2</p>
+        <p class="qtext">Was there a specific moment when you realised your current approach was no longer enough? What happened?</p>
+        <label class="qlabel" for="q2">Your answer<span class="req">*</span></label>
+        <textarea id="q2" name="q2" class="answer" data-count required></textarea>
+        <div class="counter"><span class="muted">Guide: 150 – 300 words</span><span><span class="n" id="q2-n">0</span> words</span></div>
+        <p class="err">Please answer this question before sending.</p>
+      </div>
+
+      <div class="question" data-field>
+        <p class="qnum">3</p>
+        <p class="qtext">What would need to be true, twelve weeks from now, for you to say joining the Circle was one of the best decisions you made this year?</p>
+        <label class="qlabel" for="q3">Your answer<span class="req">*</span></label>
+        <textarea id="q3" name="q3" class="answer" data-count required></textarea>
+        <div class="counter"><span class="muted">Guide: 150 – 300 words</span><span><span class="n" id="q3-n">0</span> words</span></div>
+        <p class="err">Please answer this question before sending.</p>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ===== 4. TIMING ===== -->
+    <section>
+      <p class="eyebrow" style="color:var(--tan)">Part four</p>
+      <h2>Timing and how you found us</h2>
+
+      <div class="field" data-field>
+        <label for="when">When are you hoping to start?<span class="req">*</span></label>
+        <select id="when" name="when" required>
+          <option value="">Please choose</option>
+          <option>The next cohort, if there's a place</option>
+          <option>Within the next three months</option>
+          <option>Later this year</option>
+          <option>I'd like to talk it through before deciding</option>
+        </select>
+        <p class="err">Please choose one.</p>
+      </div>
+
+      <div class="field" data-field>
+        <label for="constraints">Is there anything in the next twelve weeks that might make it hard to be fully present?<span class="opt">Optional</span></label>
+        <span class="hint">Travel, a funding round, a busy season, something at home. Saying so doesn't count against you — it helps us think about timing with you.</span>
+        <textarea id="constraints" name="constraints" rows="3"></textarea>
+      </div>
+
+      <div class="field" data-field>
+        <label for="source">How did you come to the Circle?<span class="req">*</span></label>
+        <select id="source" name="source" required>
+          <option value="">Please choose</option>
+          <option>A Master Class</option>
+          <option>The Threshold</option>
+          <option>Someone recommended it</option>
+          <option>LinkedIn</option>
+          <option>I know Elena or Chris</option>
+          <option>Another way</option>
+        </select>
+        <p class="err">Please choose one.</p>
+      </div>
+
+      <div class="field" data-field>
+        <label for="referrer">If someone pointed you here, who should we thank?<span class="opt">Optional</span></label>
+        <input type="text" id="referrer" name="referrer">
+      </div>
+
+      <div class="field" data-field>
+        <label for="anything">Anything else you'd like us to know<span class="opt">Optional</span></label>
+        <textarea id="anything" name="anything" rows="4"></textarea>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ===== 5. COMMITMENT ===== -->
+    <section>
+      <p class="eyebrow" style="color:var(--tan)">Part five</p>
+      <h2>Before you send</h2>
+      <p class="muted small">Three things to confirm, so we both start from the same understanding.</p>
+
+      <div class="checkwrap" data-field>
+        <div class="checks">
+          <div class="check">
+            <input type="checkbox" id="c1" name="c1" required>
+            <label for="c1">I've written these answers myself, in my own words.</label>
+          </div>
+          <div class="check">
+            <input type="checkbox" id="c2" name="c2" required>
+            <label for="c2">I'm ready for a twenty-minute conversation with Elena or Chris, and I understand a place is confirmed only after that.</label>
+          </div>
+          <div class="check">
+            <input type="checkbox" id="c3" name="c3" required>
+            <label for="c3">I've read the commitment: £650 a month with a three-month minimum, or £6,500 for the year paid in advance. Payment comes at the end of this process, not now.</label>
+          </div>
+        </div>
+        <p class="err">Please confirm all three before sending.</p>
+      </div>
+
+      <p class="small muted" style="margin-top:20px">What you write here is read only by Elena and Chris, and is used to consider your application and nothing else. See our <a href="PRIVACY_URL" style="color:var(--navy)">privacy notice</a>.</p>
+    </section>
+
+    <!-- ===== ACTIONS ===== -->
+    <div class="actions">
+      <div class="formnote" id="formnote"></div>
+      <div class="btnrow">
+        <button type="submit" class="btn btn-primary">Send my application →</button>
+        <button type="button" class="btn btn-ghost" id="saveBtn">Save and finish later</button>
+        <button type="button" class="btn btn-ghost" id="printBtn">Save a copy</button>
+      </div>
+      <p class="savednote" id="savednote"></p>
+    </div>
+
+  </form>
+
+  <!-- ===== SENT ===== -->
+  <div id="sent">
+    <p class="eyebrow" style="color:var(--tan)">Received</p>
+    <h2>Thank you — this has reached us.</h2>
+    <p class="lede">Elena or Chris will read it properly, not skim it, and will come back to you within five working days to arrange the conversation.</p>
+    <p>In the meantime, the next Master Class is open to everyone in The Threshold.</p>
+  </div>
+
+</main>
+
+<footer>
+  <p class="tag">From Role to Soul</p>
+  <p class="small">Teams of Tomorrow<sup>®</sup></p>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ---- FOR CHRIS: set this to your form endpoint ---- */
+  var SUBMIT_ENDPOINT = ''; // e.g. 'https://formspree.io/f/xxxxxxx'
+  /* -------------------------------------------------- */
+
+  var KEY = 'tot-circle-application-draft';
+  var form = document.getElementById('app');
+  var note = document.getElementById('formnote');
+  var saved = document.getElementById('savednote');
+
+  function fields(){ return form.querySelectorAll('input, select, textarea'); }
+
+  function showNote(msg){ note.textContent = msg; note.classList.add('show'); }
+  function hideNote(){ note.classList.remove('show'); }
+
+  /* ---------- word counters ---------- */
+  function countWords(s){
+    var t = (s || '').trim();
+    return t ? t.split(/\s+/).length : 0;
+  }
+  ['q1','q2','q3'].forEach(function(id){
+    var ta = document.getElementById(id);
+    var out = document.getElementById(id + '-n');
+    if (!ta || !out) return;
+    function update(){
+      var n = countWords(ta.value);
+      out.textContent = n;
+      out.className = 'n ' + (n === 0 ? '' : n < 150 ? 'under' : n <= 300 ? 'ok' : 'over');
+    }
+    ta.addEventListener('input', update);
+    ta.__updateCount = update;
+  });
+
+  /* ---------- draft save / restore ---------- */
+  function collect(){
+    var data = {};
+    fields().forEach(function(el){
+      if (!el.name) return;
+      data[el.name] = (el.type === 'checkbox') ? el.checked : el.value;
+    });
+    return data;
+  }
+
+  function saveDraft(announce){
+    try {
+      localStorage.setItem(KEY, JSON.stringify({ at: Date.now(), data: collect() }));
+      if (announce) {
+        saved.textContent = 'Saved on this device. You can close the tab and come back to finish.';
+      }
+    } catch (e) {
+      if (announce) {
+        saved.textContent = 'Your browser is not letting us save a draft here — you may be in private browsing. Use “Save a copy” to keep what you have written.';
+      }
+    }
+  }
+
+  function restoreDraft(){
+    var raw;
+    try { raw = localStorage.getItem(KEY); } catch (e) { return; }
+    if (!raw) return;
+    var parsed;
+    try { parsed = JSON.parse(raw); } catch (e) { return; }
+    var data = parsed && parsed.data;
+    if (!data) return;
+    fields().forEach(function(el){
+      if (!el.name || !(el.name in data)) return;
+      if (el.type === 'checkbox') el.checked = !!data[el.name];
+      else el.value = data[el.name];
+    });
+    ['q1','q2','q3'].forEach(function(id){
+      var ta = document.getElementById(id);
+      if (ta && ta.__updateCount) ta.__updateCount();
+    });
+    if (parsed.at) {
+      var d = new Date(parsed.at);
+      saved.textContent = 'Draft restored from ' + d.toLocaleDateString('en-GB', { day:'numeric', month:'long' }) +
+        ' at ' + d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' }) + '.';
+    }
+  }
+
+  function clearDraft(){ try { localStorage.removeItem(KEY); } catch (e) {} }
+
+  var saveTimer;
+  form.addEventListener('input', function(){
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function(){ saveDraft(false); }, 800);
+  });
+
+  document.getElementById('saveBtn').addEventListener('click', function(){ saveDraft(true); });
+  document.getElementById('printBtn').addEventListener('click', function(){ saveDraft(false); window.print(); });
+
+  /* ---------- validation ---------- */
+  function wrapOf(el){ return el.closest('[data-field]'); }
+
+  function validate(){
+    var firstBad = null;
+    form.querySelectorAll('[data-field]').forEach(function(w){ w.classList.remove('invalid'); });
+
+    fields().forEach(function(el){
+      if (!el.required) return;
+      var bad = (el.type === 'checkbox') ? !el.checked : !el.value.trim();
+      if (!bad && el.type === 'email') bad = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value.trim());
+      if (bad) {
+        var w = wrapOf(el);
+        if (w) w.classList.add('invalid');
+        if (!firstBad) firstBad = w || el;
+      }
+    });
+    return firstBad;
+  }
+
+  form.addEventListener('submit', function(ev){
+    ev.preventDefault();
+    hideNote();
+    var bad = validate();
+    if (bad) {
+      showNote('A few things still need filling in — they are marked below.');
+      bad.scrollIntoView({ behavior:'smooth', block:'center' });
+      return;
+    }
+
+    var payload = collect();
+    payload.submittedAt = new Date().toISOString();
+
+    if (!SUBMIT_ENDPOINT) {
+      showNote('This is a preview. Once the form endpoint is configured, pressing Send will deliver the application. Nothing has been sent.');
+      return;
+    }
+
+    var btn = form.querySelector('button[type=submit]');
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+
+    fetch(SUBMIT_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload)
+    }).then(function(res){
+      if (!res.ok) throw new Error('bad response');
+      clearDraft();
+      document.getElementById('intro').style.display = 'none';
+      form.style.display = 'none';
+      document.getElementById('sent').classList.add('show');
+      window.scrollTo({ top: 0, behavior:'smooth' });
+    }).catch(function(){
+      btn.disabled = false;
+      btn.textContent = 'Send my application →';
+      showNote('Something went wrong sending this. Your answers are still saved here. Please try again, or email them to us directly.');
+    });
+  });
+
+  restoreDraft();
+})();
+</script>
+</body>
+</html>
